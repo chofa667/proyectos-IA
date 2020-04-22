@@ -1,0 +1,52 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy as sc
+from sklearn.datasets import make_circles
+
+# CREAR EL DATASET
+
+n = 500
+p = 2
+
+x,y = make_circles(n_samples=n,factor=0.5,noise=0.05)
+
+plt.scatter(x[y == 0,0],x[y == 0,1], c ="blue")
+plt.scatter(x[y == 1,0],x[y == 1,1], c ="red")
+plt.axis("equal")
+plt.show()
+
+#CLASE DE LA CAPA DE LA RED
+class neural_layer():
+  def __init__(self,n_conn,n_neur,act_f):
+    
+    self.act_f = act_f
+
+    self.b = np.random.rand(1,n_neur)      * 2 - 1
+    self.W = np.random.rand(n_conn,n_neur) * 2 - 1 
+
+
+# FUNCIONES DE ACTIVACION
+
+sign = (lambda x: 1 / (1 + np.e ** (-x)),
+        lambda x: x * (1 - x))
+
+_x = np.linspace(-5,5,100)
+plt.plot(_x,sign[0](_x))
+
+l0 = neural_layer(p,4,sign)
+l1 = neural_layer(4,8,sign)
+
+def create_nn(topology,act_f):
+
+  nn = []
+
+  for l,layer in enumerate(topology[:-1]):
+
+    nn.append(neural_layer(topology[l],topology[l+1],act_f))
+  return nn
+
+topology = [p,4,8,16,8,4,1]
+
+create_nn(topology,sign)
+
+
